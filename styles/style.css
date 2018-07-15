@@ -6,11 +6,6 @@ h2 {
   font-family: "Open Sans", sans-serif;
 }
 
-#nodetext {
-  
-}
-
-
 #chart {
   height: 650px; /* must at least match the svg, to place content after it!*/
 }
@@ -23,7 +18,7 @@ h2 {
 
 .node text {
   pointer-events: none;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Open Sans", sans-serif; 
 }
 
 .link {
