@@ -155,7 +155,7 @@ d3.sankey = function() {
       
       resolveCollisions();
       
-      for (var alpha = 1; iterations > 0; --iterations) {
+      for (var alpha = 0; iterations > 0; --iterations) {
         relaxLeftToRight(alpha);
         resolveCollisions();
             
@@ -205,7 +205,7 @@ d3.sankey = function() {
 
             // Push any overlapping nodes right.
             nodes.sort(ascendingDepth);
-            for (i = 0; i < n; ++i) {
+            for (i = n; i > 0; --i) {
                 node = nodes[i];
                 dy = x0 - node.x;
                 if (dy > 0) node.x += dy;
@@ -300,13 +300,13 @@ d3.sankey = function() {
     });
 
     function ascendingSourceDepth(a, b) {
-      //return a.source.y - b.source.y;
-        return a.source.x - b.source.x;
+      return a.source.y - b.source.y;
+        // return a.source.x - b.source.x;
     }
 
     function ascendingTargetDepth(a, b) {
-      //return a.target.y - b.target.y;
-        return a.target.x - b.target.x;
+      return a.target.y - b.target.y;
+        // return a.target.x - b.target.x;
     }
   }
 
