@@ -2,9 +2,7 @@ d3.sankey = function() {
   var sankey = {},
       nodeWidth = 24,
       nodePadding = 8, // was 8, needs to be much bigger. these numbers are actually overwritten in the html when we instantiate the viz!
-      size = [1, 1],
-      nodes = [],
-      links = [];
+      size = [1, 1];
 
   sankey.nodeWidth = function(_) {
     if (!arguments.length) return nodeWidth;
@@ -55,7 +53,7 @@ d3.sankey = function() {
   };
 
   sankey.link = function() {
-    var curvature = .5;
+    var curvature = .4;
 
       // x0 = line start X
       // y0 = line start Y
@@ -155,57 +153,18 @@ d3.sankey = function() {
       
       resolveCollisions();
       
-      for (var alpha = 0; iterations > 0; --iterations) {
-        relaxLeftToRight(alpha);
-        resolveCollisions();
-            
-        relaxRightToLeft(alpha *= .99);
-        resolveCollisions();
-      }
-      
-      // these relax methods should probably be operating on one level of the nodes, not all!?
-      
-      function relaxLeftToRight(alpha) {
-        nodesByBreadth.forEach(function(nodes, breadth) {
-            nodes.forEach(function(node) {
-                if (node.targetLinks.length) {
-                    var y = d3.sum(node.targetLinks, weightedSource) / d3.sum(node.targetLinks, value);
-                    node.x += (y - center(node)) * alpha;
-                }
-            });
-        });
-
-      function weightedSource(link) {
-        return center(link.source) * link.value;
-      }
-    }
-
-    function relaxRightToLeft(alpha) {
-      nodesByBreadth.slice().reverse().forEach(function(nodes) {
-        nodes.forEach(function(node) {
-          if (node.sourceLinks.length) {
-            var y = d3.sum(node.sourceLinks, weightedTarget) / d3.sum(node.sourceLinks, value);
-            node.x += (y - center(node)) * alpha;
-          }
-        });
-      });
-
-      function weightedTarget(link) {
-        return center(link.target) * link.value;
-      }
-    }
       
       function resolveCollisions() {
         nodesByBreadth.forEach(function(nodes) {
             var node,
             dy,
-            x0 = 0,
+            x0 = 5,
             n = nodes.length,
             i;
 
             // Push any overlapping nodes right.
             nodes.sort(ascendingDepth);
-            for (i = n; i > 0; --i) {
+            for (i = 0; i < n; ++i) {
                 node = nodes[i];
                 dy = x0 - node.x;
                 if (dy > 0) node.x += dy;
@@ -300,19 +259,16 @@ d3.sankey = function() {
     });
 
     function ascendingSourceDepth(a, b) {
-      return a.source.y - b.source.y;
-        // return a.source.x - b.source.x;
+      //return a.source.y - b.source.y;
+        return a.source.x - b.source.x;
     }
 
     function ascendingTargetDepth(a, b) {
-      return a.target.y - b.target.y;
-        // return a.target.x - b.target.x;
+      //return a.target.y - b.target.y;
+        return a.target.x - b.target.x;
     }
   }
 
-  function center(node) {   
-      return node.y + node.dy / 2;
-  }
 
   function value(link) {
     return link.value;
